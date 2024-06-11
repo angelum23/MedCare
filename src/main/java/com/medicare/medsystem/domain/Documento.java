@@ -17,6 +17,7 @@ import lombok.Setter;
 public class Documento extends BaseEntity implements IBaseEntity {
     @Column(name = "urldocumento")
     String urlDocumento;
+
     @Column(name = "descricao")
     String descricao;
 }
