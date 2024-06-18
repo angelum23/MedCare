@@ -34,6 +34,6 @@ public class GradeHorario extends BaseEntity implements IBaseEntity {
     @Column(name = "descricao")
     String descricao;
 
-    @OneToMany(mappedBy = "agendamento")
+    @OneToMany(mappedBy = "gradeHorario")
     private List<Agendamento> agendamentos;
 }

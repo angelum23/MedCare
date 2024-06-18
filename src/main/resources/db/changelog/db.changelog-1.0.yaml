@@ -1,0 +1,155 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: angelum23
+      changes:
+        - createTable:
+            tableName: documento
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: urldocumento
+                  type: VARCHAR(255)
+              - column:
+                  name: descricao
+                  type: VARCHAR(255)
+
+  - changeSet:
+      id: 2
+      author: angelum23
+      changes:
+        - createTable:
+            tableName: pessoa
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nome
+                  type: VARCHAR(255)
+              - column:
+                  name: tipo
+                  type: VARCHAR(255)
+              - column:
+                  name: tipoidentificacao
+                  type: VARCHAR(255)
+              - column:
+                  name: identificacao
+                  type: VARCHAR(255)
+              - column:
+                  name: iddocumento
+                  type: INT
+              - column:
+                  name: removido
+                  type: BOOLEAN
+                  defaultValue: "false"
+        - addForeignKeyConstraint:
+            baseTableName: pessoa
+            baseColumnNames: iddocumento
+            referencedTableName: documento
+            constraintName: fk_pessoa_documento
+            referencedColumnNames: id
+
+  - changeSet:
+      id: 3
+      author: angelum23
+      changes:
+        - createTable:
+            tableName: grade_horario
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: inicioexpediente
+                  type: TIMESTAMP
+              - column:
+                  name: fimexpediente
+                  type: TIMESTAMP
+              - column:
+                  name: duracaohorario
+                  type: INT
+              - column:
+                  name: diasemana
+                  type: VARCHAR(255)
+              - column:
+                  name: descricao
+                  type: VARCHAR(255)
+              - column:
+                  name: removido
+                  type: BOOLEAN
+                  defaultValue: "false"
+
+  - changeSet:
+      id: 4
+      author: angelum23
+      changes:
+        - createTable:
+            tableName: agendamento
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: descricao
+                  type: VARCHAR(255)
+              - column:
+                  name: horainicio
+                  type: TIMESTAMP
+              - column:
+                  name: diatodo
+                  type: BOOLEAN
+              - column:
+                  name: quant_horarios
+                  type: INT
+              - column:
+                  name: tipo
+                  type: VARCHAR(255)
+              - column:
+                  name: dadosconsulta
+                  type: VARCHAR(255)
+              - column:
+                  name: idmedico
+                  type: INT
+              - column:
+                  name: idpaciente
+                  type: INT
+              - column:
+                  name: idgradehorario
+                  type: INT
+              - column:
+                  name: removido
+                  type: BOOLEAN
+                  defaultValue: "false"
+        - addForeignKeyConstraint:
+            baseTableName: agendamento
+            baseColumnNames: idmedico
+            referencedTableName: pessoa
+            referencedColumnNames: id
+            constraintName: fk_agendamento_medico
+        - addForeignKeyConstraint:
+            baseTableName: agendamento
+            baseColumnNames: idpaciente
+            referencedTableName: pessoa
+            referencedColumnNames: id
+            constraintName: fk_agendamento_paciente
+        - addForeignKeyConstraint:
+            baseTableName: agendamento
+            baseColumnNames: idgradehorario
+            referencedTableName: grade_horario
+            referencedColumnNames: id
+            constraintName: fk_agendamento_grade_horario

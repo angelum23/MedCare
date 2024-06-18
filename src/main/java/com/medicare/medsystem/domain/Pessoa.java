@@ -33,6 +33,6 @@ public class Pessoa extends BaseEntity implements IBaseEntity {
     @JoinColumn(name = "iddocumento")
     private Documento documento;
 
-    @OneToMany(mappedBy = "agendamento")
-    private List<Agendamento> agendamentos;
+    @OneToMany(mappedBy = "paciente")
+    private List<Agendamento> agendamentosPaciente;
 }
