@@ -12,8 +12,11 @@ import java.util.List;
 @RequestMapping("/Base")
 public abstract class BaseController<T extends IBaseEntity> {
 
-    @Autowired
-    private BaseService<T> service;
+    private final BaseService<T> service;
+
+    public BaseController(BaseService<T> service) {
+        this.service = service;
+    }
 
     @GetMapping("/Recuperar")
     public ResponseEntity<Object> recuperar(@RequestParam("id") Integer id) {
