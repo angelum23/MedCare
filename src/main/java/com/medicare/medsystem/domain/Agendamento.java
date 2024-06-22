@@ -1,6 +1,5 @@
 package com.medicare.medsystem.domain;
 
-import com.medicare.medsystem.domain.Base.BaseEntity;
 import com.medicare.medsystem.domain.Base.IBaseEntity;
 import com.medicare.medsystem.domain.Enum.EnumTipoAgendamento;
 import jakarta.persistence.*;
@@ -15,7 +14,15 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Agendamento extends BaseEntity implements IBaseEntity {
+public class Agendamento implements IBaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "idagendamento")
+    private Integer id;
+
+    @Column(name = "removido")
+    private Boolean removido = false;
+
     @Column(name = "descricao")
     String descricao;
 
@@ -43,6 +50,6 @@ public class Agendamento extends BaseEntity implements IBaseEntity {
     private Pessoa paciente;
 
     @ManyToOne
-    @JoinColumn(name = "idgradehorario")
+    @JoinColumn(name = "id")
     private GradeHorario gradeHorario;
 }

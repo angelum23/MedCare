@@ -1,9 +1,6 @@
 package com.medicare.medsystem.service;
 
 import com.medicare.medsystem.domain.Base.IBaseEntity;
-import com.medicare.medsystem.repository.IBaseRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -13,15 +10,14 @@ import java.util.NoSuchElementException;
 
 @Service
 public abstract class BaseService<T extends IBaseEntity> {
-    @Autowired
-    private IBaseRepository<T> repository;
+    private JpaRepository<T, Integer> repository;
 
-    protected IBaseRepository<T> getRepository() {
+    protected JpaRepository<T, Integer> getRepository() {
         return repository;
     }
 
     public T recuperar(Integer id) throws NoSuchElementException {
-        return (T) getRepository().findById(id).orElseThrow();
+        return getRepository().findById(id).orElseThrow();
     }
 
     public List<T> recuperar() {

@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: documento
             columns:
               - column:
-                  name: id
+                  name: iddocumento
                   type: INT
                   constraints:
                     primaryKey: true
@@ -27,7 +27,7 @@ databaseChangeLog:
             tableName: pessoa
             columns:
               - column:
-                  name: id
+                  name: idpessoa
                   type: INT
                   constraints:
                     primaryKey: true
@@ -56,7 +56,7 @@ databaseChangeLog:
             baseColumnNames: iddocumento
             referencedTableName: documento
             constraintName: fk_pessoa_documento
-            referencedColumnNames: id
+            referencedColumnNames: iddocumento
 
   - changeSet:
       id: 3
@@ -66,7 +66,7 @@ databaseChangeLog:
             tableName: grade_horario
             columns:
               - column:
-                  name: id
+                  name: idgradehorario
                   type: INT
                   constraints:
                     primaryKey: true
@@ -99,7 +99,7 @@ databaseChangeLog:
             tableName: agendamento
             columns:
               - column:
-                  name: id
+                  name: idagendamento
                   type: INT
                   constraints:
                     primaryKey: true
@@ -139,17 +139,17 @@ databaseChangeLog:
             baseTableName: agendamento
             baseColumnNames: idmedico
             referencedTableName: pessoa
-            referencedColumnNames: id
+            referencedColumnNames: idpessoa
             constraintName: fk_agendamento_medico
         - addForeignKeyConstraint:
             baseTableName: agendamento
             baseColumnNames: idpaciente
             referencedTableName: pessoa
-            referencedColumnNames: id
+            referencedColumnNames: idpessoa
             constraintName: fk_agendamento_paciente
         - addForeignKeyConstraint:
             baseTableName: agendamento
             baseColumnNames: idgradehorario
             referencedTableName: grade_horario
-            referencedColumnNames: id
+            referencedColumnNames: idgradehorario
             constraintName: fk_agendamento_grade_horario

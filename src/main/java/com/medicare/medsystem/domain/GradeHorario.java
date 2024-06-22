@@ -1,11 +1,8 @@
 package com.medicare.medsystem.domain;
 
-import com.medicare.medsystem.domain.Base.BaseEntity;
 import com.medicare.medsystem.domain.Base.IBaseEntity;
 import com.medicare.medsystem.domain.Enum.EnumDiaSemana;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +15,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GradeHorario extends BaseEntity implements IBaseEntity {
+public class GradeHorario implements IBaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "idgradehorario")
+    private Integer id;
+
+    @Column(name = "removido")
+    private Boolean removido = false;
+
     @Column(name = "inicioexpediente")
     Date inicioExpediente;
 

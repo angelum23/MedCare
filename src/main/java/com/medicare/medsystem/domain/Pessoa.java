@@ -1,6 +1,5 @@
 package com.medicare.medsystem.domain;
 
-import com.medicare.medsystem.domain.Base.BaseEntity;
 import com.medicare.medsystem.domain.Base.IBaseEntity;
 import com.medicare.medsystem.domain.Enum.EnumTipoIdentificacao;
 import com.medicare.medsystem.domain.Enum.EnumTipoPessoa;
@@ -16,7 +15,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pessoa extends BaseEntity implements IBaseEntity {
+public class Pessoa implements IBaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "idpessoa")
+    private Integer id;
+
+    @Column(name = "removido")
+    private Boolean removido = false;
+
     @Column(name = "nome")
     String nome;
 
@@ -33,6 +40,9 @@ public class Pessoa extends BaseEntity implements IBaseEntity {
     @JoinColumn(name = "iddocumento")
     private Documento documento;
 
-    @OneToMany(mappedBy = "pessoa")
+    @OneToMany(mappedBy = "paciente")
     private List<Agendamento> agendamentosPaciente;
+
+    @OneToMany(mappedBy = "medico")
+    private List<Agendamento> agendamentosMedico;
 }
