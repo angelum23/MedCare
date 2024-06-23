@@ -4,5 +4,6 @@ public enum EnumTipoAgendamento {
     Consulta,
     Retorno,
     Encaminhamento,
-    Cirurgia
+    Cirurgia,
+    Folga
 }
