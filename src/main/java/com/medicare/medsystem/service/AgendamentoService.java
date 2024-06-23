@@ -35,7 +35,10 @@ public class AgendamentoService extends BaseService<Agendamento>{
     }
 
     private void validarHorarioNaoAgendado(Agendamento agendamento) {
-        var agendamentos = repository.findAllByHoraInicioGreaterThanEqualAndHoraFimLessThanEqualAndRemovidoIsFalse(agendamento.getHoraInicio(), agendamento.getHoraFim());
+        var agendamentos = repository.findAllByHoraInicioGreaterThanEqualAndHoraFimLessThanEqualAndRemovidoIsFalse(
+            agendamento.getHoraInicio(),
+            agendamento.getHoraFim()
+        );
 
         if(!agendamentos.isEmpty()) {
             throw new IllegalArgumentException("Este horário já está agendado, por favor escolha outro");
@@ -43,7 +46,10 @@ public class AgendamentoService extends BaseService<Agendamento>{
     }
 
     private void validarSeExisteGradeNoHorario(Agendamento agendamento) {
-        var gradeHorarios = gradeHorarioRepository.findAllByInicioExpedienteGreaterThanEqualAndFimExpedienteLessThanEqualAndRemovidoIsFalse(agendamento.getHoraInicio(), agendamento.getHoraFim());
+        var gradeHorarios = gradeHorarioRepository.findAllByInicioExpedienteGreaterThanEqualAndFimExpedienteLessThanEqualAndRemovidoIsFalse(
+            agendamento.getHoraInicio(),
+            agendamento.getHoraFim()
+        );
 
         if(gradeHorarios.isEmpty()) {
             throw new IllegalArgumentException("Nenhum horário disponível para o agendamento");

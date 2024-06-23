@@ -6,16 +6,15 @@ import com.medicare.medsystem.domain.Dto.ListarDto;
 import com.medicare.medsystem.domain.GradeHorario;
 import com.medicare.medsystem.service.GradeHorarioService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/GradeHorario")
 public class GradeHorarioController extends BaseController<GradeHorario> {
+    private final GradeHorarioService service;
     public GradeHorarioController(GradeHorarioService service) {
         super(service);
+        this.service = service;
     }
 
     @GetMapping("/Listar")
@@ -28,10 +27,10 @@ public class GradeHorarioController extends BaseController<GradeHorario> {
         }
     }
 
-    @GetMapping("/InserirSemanal")
+    @PostMapping("/InserirSemanal")
     public ResponseEntity<Object> inserirSemanal(@RequestBody InserirSemanalDto dto) {
         try {
-            //var registro = service.inserirSemanal(dto); //todo inserir registros para toda a semana
+            var ids = service.inserirSemanal(dto);
             return Success("Not implemented yet!");
         } catch (Exception e){
             return Error("Erro ao recuperar registros! " + e.getMessage());
