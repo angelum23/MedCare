@@ -30,9 +30,6 @@ public class GradeHorario implements IBaseEntity {
     @Column(name = "fimexpediente")
     Date fimExpediente;
 
-    @Column(name = "duracaohorario")
-    Integer duracaoHorario;
-
     @Column(name = "diasemana")
     EnumDiaSemana diaSemana;
 

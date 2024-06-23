@@ -38,17 +38,27 @@ public abstract class BaseController<T extends IBaseEntity> {
         }
     }
 
-    @PostMapping("/salvar")
-    public ResponseEntity<Object> salvar(@RequestBody T entidade) {
+    @PostMapping("/Inserir")
+    public ResponseEntity<Object> inserir(@RequestBody T entidade) {
         try {
             Integer id = service.salvar(entidade);
-            return Success("Registro salvo com sucesso: " + id);
+            return Success("Registro inserido com sucesso: " + id);
         } catch(Exception e) {
-            return Error("Erro ao salvar registro! " + e.getMessage());
+            return Error("Erro ao inserir registro! " + e.getMessage());
         }
     }
 
-    @DeleteMapping("/remover")
+    @PutMapping("/Alterar")
+    public ResponseEntity<Object> alterar(@RequestBody T entidade) {
+        try {
+            Integer id = service.salvar(entidade);
+            return Success("Registro alterado com sucesso: " + id);
+        } catch(Exception e) {
+            return Error("Erro ao alterar registro! " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/Remover")
     public ResponseEntity<Object> remover(@RequestParam("id") Integer id) {
         try {
             service.remover(id);

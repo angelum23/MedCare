@@ -78,9 +78,6 @@ databaseChangeLog:
                   name: fimexpediente
                   type: TIMESTAMP
               - column:
-                  name: duracaohorario
-                  type: INT
-              - column:
                   name: diasemana
                   type: VARCHAR(255)
               - column:
@@ -111,11 +108,8 @@ databaseChangeLog:
                   name: horainicio
                   type: TIMESTAMP
               - column:
-                  name: diatodo
-                  type: BOOLEAN
-              - column:
-                  name: quant_horarios
-                  type: INT
+                  name: horafim
+                  type: TIMESTAMP
               - column:
                   name: tipo
                   type: VARCHAR(255)

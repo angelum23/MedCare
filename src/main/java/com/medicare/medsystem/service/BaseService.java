@@ -26,7 +26,6 @@ public abstract class BaseService<T extends IBaseEntity> {
 
     public Integer salvar(T entidade) throws Exception {
         var id = entidade.getId();
-        exceptionSeNaoExiste(id);
 
         getRepository().save(entidade);
         return id;
@@ -35,7 +34,10 @@ public abstract class BaseService<T extends IBaseEntity> {
     public void remover(Integer id) throws Exception {
         exceptionSeNaoExiste(id);
 
-        getRepository().deleteById(id);
+        var entidade = getRepository().findById(id).orElseThrow();
+        entidade.setRemovido(true);
+
+        getRepository().save(entidade);
     }
 
     private void exceptionSeNaoExiste(Integer id) throws Exception {

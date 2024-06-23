@@ -29,11 +29,8 @@ public class Agendamento implements IBaseEntity {
     @Column(name = "horainicio")
     Date horaInicio;
 
-    @Column(name = "diatodo")
-    Boolean diaTodo;
-
-    @Column(name = "quanthorarios")
-    Integer quantHorarios;
+    @Column(name = "horafim")
+    Date horaFim;
 
     @Column(name = "tipo")
     EnumTipoAgendamento tipo;
