@@ -25,13 +25,6 @@ public class PessoaService extends BaseService<Pessoa>{
         return repository;
     }
 
-    @Override
-    public Integer salvar(Pessoa pessoa) throws Exception {
-        var documento = pessoa.getDocumento();
-
-        return super.salvar(pessoa);
-    }
-
     public Integer salvarComFoto(InserirPessoaDto pessoaDto) throws Exception {
         if(pessoaDto.documento().isPresent()) {
             documentoService.salvar(pessoaDto.documento().get());
@@ -40,7 +33,9 @@ public class PessoaService extends BaseService<Pessoa>{
         return super.salvar(pessoaDto.pessoa());
     }
 
-    public List<Pessoa> listar(ListarPessoaDto dto) {
+    public List<Pessoa> listar(ListarPessoaDto dto) throws Exception {
+        exceptionSeNull(dto.getTipo(), Optional.of("Tipo de pessoa não informado!"));
+
         var pessoas = repository.findAllByTipoEqualsAndRemovidoIsFalse(dto.getTipo());
 
         return super.listar(dto, Optional.ofNullable(pessoas));

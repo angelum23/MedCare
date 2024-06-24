@@ -93,7 +93,9 @@ public class AgendamentoService extends BaseService<Agendamento>{
         return super.salvar(agendamentoDto.agendamento());
     }
 
-    public List<Agendamento> listar(ListarAgendamentoDto dto) {
+    public List<Agendamento> listar(ListarAgendamentoDto dto) throws Exception {
+        exceptionSeNull(dto.getTipo(), Optional.of("Tipo de agendamento não informado!"));
+
         var agendamentos = repository.findAllByTipoEqualsAndRemovidoIsFalse(dto.getTipo());
 
         return super.listar(dto, Optional.ofNullable(agendamentos));

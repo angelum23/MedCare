@@ -29,10 +29,8 @@ public abstract class BaseService<T extends IBaseEntity> {
     }
 
     public Integer salvar(T entidade) throws Exception {
-        var id = entidade.getId();
-
-        getRepository().save(entidade);
-        return id;
+        entidade = getRepository().save(entidade);
+        return entidade.getId();
     }
 
     public void remover(Integer id) throws Exception {
@@ -50,16 +48,26 @@ public abstract class BaseService<T extends IBaseEntity> {
         throw new Exception("Registro não encontrado");
     }
 
-    public List<T> listar(ListarDto dto, Optional<List<T>> registrosParam) {
+    public List<T> listar(ListarDto dto, Optional<List<T>> registrosParam) throws Exception {
+        exceptionSeNull(dto, Optional.of("Filtros não informados"));
+        exceptionSeNull(dto.getPage(), Optional.of("Pagina não informada"));
+        exceptionSeNull(dto.getRowsPerPage(), Optional.of("Quantidade de linhas por pagina não informada"));
+
         var registros = registrosParam.orElseGet(() -> getRepository().findAll());
 
-        var quantidadeSkip = dto.getPages() * dto.getRowsPerPage();
+        var quantidadeSkip = (dto.getPage() - 1) * dto.getRowsPerPage();
 
         if(registros.size() < quantidadeSkip) {
             throw new IllegalArgumentException("Nenhum registro encontrado");
         }
 
-        var pagina = registros.stream().skip(dto.getPages()).limit(dto.getRowsPerPage()).toList();
+        var pagina = registros.stream().skip(quantidadeSkip).limit(dto.getRowsPerPage()).toList();
         return pagina;
+    }
+
+    public void exceptionSeNull(Object reg, Optional<String> mensagemErro) throws Exception {
+        if (reg == null) {
+            throw new Exception(mensagemErro.orElse("Registro não encontrado!"));
+        }
     }
 }

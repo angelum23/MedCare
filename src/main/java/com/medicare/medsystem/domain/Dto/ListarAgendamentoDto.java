@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class ListarAgendamentoDto extends ListarDto {
     private final EnumTipoAgendamento tipo;
-    public ListarAgendamentoDto(Integer pages, Integer rowsPerPage, EnumTipoAgendamento tipo) {
-        super(pages, rowsPerPage);
+    public ListarAgendamentoDto(Integer page, Integer rowsPerPage, EnumTipoAgendamento tipo) {
+        super(page, rowsPerPage);
         this.tipo = tipo;
     }
 }

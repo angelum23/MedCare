@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class ListarDto {
-    private final Integer pages;
+    private final Integer page;
     private final Integer rowsPerPage;
 
-    public ListarDto(Integer pages, Integer rowsPerPage) {
-        this.pages = pages;
+    public ListarDto(Integer page, Integer rowsPerPage) {
+        this.page = page;
         this.rowsPerPage = rowsPerPage;
     }
 }
