@@ -8,6 +8,11 @@ consulta de horários, agendamentos de consultas, feedbacks, retornos médicos e
 
 # <u>[Modelo físico](https://dbdiagram.io/d/6665e2909713410b05224ef1)</u>
 
+# Rodando o docker (na pasta raiz)
+- ./mvnw clean -f pom.xml
+- ./mvnw package -f pom.xml (se der erro tem que rodar pelo intelliJ que da certo)
+- docker build -t imgmedicare .
+- docker run -p 8080:8080 --name medicare imgmedicare
 
 ## Documentação das tecnologias utilizadas
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
