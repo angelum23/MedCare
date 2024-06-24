@@ -37,4 +37,14 @@ public class PessoaController extends BaseController<Pessoa> {
             return Error("Erro ao inserir registro! " + e.getMessage());
         }
     }
+
+    @PostMapping("/AlterarPessoa")
+    public ResponseEntity<Object> alterar(@RequestBody InserirPessoaDto entidade) {
+        try {
+            Integer id = service.salvarComFoto(entidade);
+            return Success("Registro alterado com sucesso: " + id);
+        } catch(Exception e) {
+            return Error("Erro ao alterado registro! " + e.getMessage());
+        }
+    }
 }
