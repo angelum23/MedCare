@@ -61,7 +61,7 @@ public class AgendamentoController extends BaseController<Agendamento> {
         }
     }
 
-    @PostMapping("/AlterarAgendamento")
+    @PutMapping("/AlterarAgendamento")
     public ResponseEntity<Object> alterar(@RequestBody InserirAgendamentoDto agendamentoDto) {
         try {
             Integer id = service.salvarComDocumento(agendamentoDto);
