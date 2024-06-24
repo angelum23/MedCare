@@ -1,12 +1,14 @@
 package com.medicare.medsystem.controller.base;
 
 import com.medicare.medsystem.domain.Base.IBaseEntity;
+import com.medicare.medsystem.domain.Dto.ListarDto;
 import com.medicare.medsystem.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/Base")
@@ -33,6 +35,16 @@ public abstract class BaseController<T extends IBaseEntity> {
         try {
             var registro = service.recuperar();
             return Success(registro);
+        } catch (Exception e){
+            return Error("Erro ao recuperar registros! " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/Listar")
+    public ResponseEntity<Object> listar(@RequestBody ListarDto dto) {
+        try {
+            var registros = service.listar(dto, Optional.empty());
+            return Success(registros);
         } catch (Exception e){
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }

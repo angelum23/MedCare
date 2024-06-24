@@ -1,29 +1,40 @@
 package com.medicare.medsystem.controller;
 
 import com.medicare.medsystem.controller.base.BaseController;
+import com.medicare.medsystem.domain.Dto.InserirPessoaDto;
 import com.medicare.medsystem.domain.Dto.ListarPessoaDto;
 import com.medicare.medsystem.domain.Pessoa;
 import com.medicare.medsystem.service.PessoaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/Pessoa")
 public class PessoaController extends BaseController<Pessoa> {
+    private final PessoaService service;
+
     public PessoaController(PessoaService service) {
         super(service);
+        this.service = service;
     }
 
-    @GetMapping("/Listar")
+    @GetMapping("/ListarPessoa")
     public ResponseEntity<Object> listar(@RequestBody ListarPessoaDto dto) {
         try {
-            //var registro = service.recuperar(dto); //todo recuperar paginado e com filtro
-            return Success("Not implemented yet!");
+            var registros = service.listar(dto);
+            return Success(registros);
         } catch (Exception e){
             return Error("Erro ao recuperar registros! " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/InserirPessoa")
+    public ResponseEntity<Object> inserir(@RequestBody InserirPessoaDto entidade) {
+        try {
+            Integer id = service.salvarComFoto(entidade);
+            return Success("Registro inserido com sucesso: " + id);
+        } catch(Exception e) {
+            return Error("Erro ao inserir registro! " + e.getMessage());
         }
     }
 }

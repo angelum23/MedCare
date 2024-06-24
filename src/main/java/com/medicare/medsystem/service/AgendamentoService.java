@@ -1,6 +1,9 @@
 package com.medicare.medsystem.service;
 
 import com.medicare.medsystem.domain.Agendamento;
+import com.medicare.medsystem.domain.Dto.InserirAgendamentoDto;
+import com.medicare.medsystem.domain.Dto.ListarAgendamentoDto;
+import com.medicare.medsystem.domain.Dto.ListarDto;
 import com.medicare.medsystem.domain.Enum.EnumTipoAgendamento;
 import com.medicare.medsystem.repository.IAgendamentoRepository;
 import com.medicare.medsystem.repository.IGradeHorarioRepository;
@@ -18,9 +21,10 @@ import java.util.Optional;
 public class AgendamentoService extends BaseService<Agendamento>{
     @Autowired
     private IAgendamentoRepository repository;
-
     @Autowired
     private IGradeHorarioRepository gradeHorarioRepository;
+    @Autowired
+    private DocumentoService documentoService;
 
     @Override
     protected JpaRepository<Agendamento, Integer> getRepository() {
@@ -79,5 +83,19 @@ public class AgendamentoService extends BaseService<Agendamento>{
         folga.setHoraFim(dataFim);
 
         salvar(folga);
+    }
+
+    public Integer salvarComDocumento(InserirAgendamentoDto agendamentoDto) throws Exception{
+        if(agendamentoDto.documento().isPresent()) {
+            documentoService.salvar(agendamentoDto.documento().get());
+        }
+
+        return super.salvar(agendamentoDto.agendamento());
+    }
+
+    public List<Agendamento> listar(ListarAgendamentoDto dto) {
+        var agendamentos = repository.findAllByTipoEqualsAndRemovidoIsFalse(dto.getTipo());
+
+        return super.listar(dto, Optional.ofNullable(agendamentos));
     }
 }

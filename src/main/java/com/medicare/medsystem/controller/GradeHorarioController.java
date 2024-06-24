@@ -8,6 +8,9 @@ import com.medicare.medsystem.service.GradeHorarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/GradeHorario")
 public class GradeHorarioController extends BaseController<GradeHorario> {
@@ -17,21 +20,22 @@ public class GradeHorarioController extends BaseController<GradeHorario> {
         this.service = service;
     }
 
-    @GetMapping("/Listar")
+    @GetMapping("/ListarGradeHorario")
     public ResponseEntity<Object> listar(@RequestBody ListarDto dto) {
         try {
-            //var registro = service.recuperar(dto); //todo listar paginado
-            return Success("Not implemented yet!");
+            var registros = service.listar(dto, Optional.empty());
+            return Success(registros);
         } catch (Exception e){
-            return Error("Erro ao recuperar registros! " + e.getMessage());
+            return Error("Erro ao recuperar grades de horário! " + e.getMessage());
         }
     }
 
     @PostMapping("/InserirSemanal")
     public ResponseEntity<Object> inserirSemanal(@RequestBody InserirSemanalDto dto) {
         try {
-            var ids = service.inserirSemanal(dto);
-            return Success("Not implemented yet!");
+            List<Integer> ids = service.inserirSemanal(dto);
+            List<String> idsString = ids.stream().map(String::valueOf).toList();
+            return Success("Registros inseridos com sucesso: " + String.join(", ", idsString));
         } catch (Exception e){
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }

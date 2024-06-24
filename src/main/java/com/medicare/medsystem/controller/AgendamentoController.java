@@ -2,6 +2,7 @@ package com.medicare.medsystem.controller;
 
 import com.medicare.medsystem.controller.base.BaseController;
 import com.medicare.medsystem.domain.Agendamento;
+import com.medicare.medsystem.domain.Dto.InserirAgendamentoDto;
 import com.medicare.medsystem.domain.Dto.ListarAgendamentoDto;
 import com.medicare.medsystem.service.AgendamentoService;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +27,17 @@ public class AgendamentoController extends BaseController<Agendamento> {
             var registros = service.recuperarPorDia(Optional.empty());
             return Success(registros);
         } catch (Exception e){
-            return Error("Erro ao recuperar registros! " + e.getMessage());
+            return Error("Erro ao recuperar agendamentos do dia! " + e.getMessage());
         }
     }
 
-    @GetMapping("/Listar")
+    @GetMapping("/ListarAgendamento")
     public ResponseEntity<Object> listar(@RequestBody ListarAgendamentoDto dto) {
         try {
-            //var registro = service.recuperar(dto); //todo listar agendamentos paginado
-            return Success("Not implemented yet!");
+            var registro = service.listar(dto);
+            return Success(registro);
         } catch (Exception e) {
-            return Error("Erro ao recuperar registros! " + e.getMessage());
+            return Error("Erro ao recuperar agendamentos! " + e.getMessage());
         }
     }
 
@@ -44,9 +45,29 @@ public class AgendamentoController extends BaseController<Agendamento> {
     public ResponseEntity<Object> folgar(@RequestParam("dia") Date data) {
         try {
             service.folgar(data);
-            return Success("Not implemented yet!");
+            return Success("Folga registrada com sucesso");
         } catch (Exception e){
             return Error("Erro ao criar folga! " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/InserirAgendamento")
+    public ResponseEntity<Object> inserir(@RequestBody InserirAgendamentoDto agendamentoDto) {
+        try {
+            Integer id = service.salvarComDocumento(agendamentoDto);
+            return Success("Agendamento inserido com sucesso: " + id);
+        } catch(Exception e) {
+            return Error("Erro ao inserir registro! " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/AlterarAgendamento")
+    public ResponseEntity<Object> alterar(@RequestBody InserirAgendamentoDto agendamentoDto) {
+        try {
+            Integer id = service.salvarComDocumento(agendamentoDto);
+            return Success("Agendamento alterado com sucesso: " + id);
+        } catch(Exception e) {
+            return Error("Erro ao alterar registro! " + e.getMessage());
         }
     }
 }
