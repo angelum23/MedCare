@@ -43,7 +43,8 @@ consulta de horários, agendamentos de consultas, feedbacks, retornos médicos e
 
 **ENDPOINTS**
 
-![EndPoints](https://files.fm/u/7v9sxk32nf)
+Imagem:
+https://files.fm/u/7v9sxk32nf
 
 **REQUISIÇÕES PESSOA**
 
