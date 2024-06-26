@@ -456,4 +456,8 @@ Erros esperados:
 
 - Erro ao recuperar registros!
 
+**9- Ajuda:**
+GET
+
+http://localhost:8080/Ajuda
 
