@@ -41,6 +41,10 @@ consulta de horários, agendamentos de consultas, feedbacks, retornos médicos e
 
 ## Documentação
 
+**ENDPOINTS**
+
+![EndPoints](https://files.fm/u/7v9sxk32nf)
+
 **REQUISIÇÕES PESSOA**
 
 **1 – Inserir Pessoa:**
