@@ -14,8 +14,6 @@ import java.util.Optional;
 
 @Service
 public abstract class BaseService<T extends IBaseEntity> {
-    private JpaRepository<T, Integer> repository;
-
     protected abstract JpaRepository<T, Integer> getRepository();
 
     public T recuperar(Integer id) throws NoSuchElementException {
