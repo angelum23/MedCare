@@ -38,7 +38,7 @@ public class PessoaController extends BaseController<Pessoa> {
         }
     }
 
-    @PostMapping("/AlterarPessoa")
+    @PutMapping("/AlterarPessoa")
     public ResponseEntity<Object> alterar(@RequestBody InserirPessoaDto entidade) {
         try {
             Integer id = service.salvarComFoto(entidade);
