@@ -3,10 +3,10 @@ package com.medicare.medsystem.service;
 import com.medicare.medsystem.domain.Agendamento;
 import com.medicare.medsystem.domain.Dto.InserirAgendamentoDto;
 import com.medicare.medsystem.domain.Dto.ListarAgendamentoDto;
-import com.medicare.medsystem.domain.Dto.ListarDto;
 import com.medicare.medsystem.domain.Enum.EnumTipoAgendamento;
 import com.medicare.medsystem.repository.IAgendamentoRepository;
 import com.medicare.medsystem.repository.IGradeHorarioRepository;
+import com.medicare.medsystem.service.base.BaseService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AgendamentoService extends BaseService<Agendamento>{
+public class AgendamentoService extends BaseService<Agendamento> {
     @Autowired
     private IAgendamentoRepository repository;
     @Autowired

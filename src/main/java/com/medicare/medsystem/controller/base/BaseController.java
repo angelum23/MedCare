@@ -2,8 +2,7 @@ package com.medicare.medsystem.controller.base;
 
 import com.medicare.medsystem.domain.Base.IBaseEntity;
 import com.medicare.medsystem.domain.Dto.ListarDto;
-import com.medicare.medsystem.service.BaseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.medicare.medsystem.service.base.BaseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

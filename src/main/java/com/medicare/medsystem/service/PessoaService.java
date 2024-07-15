@@ -1,11 +1,10 @@
 package com.medicare.medsystem.service;
 
-import com.medicare.medsystem.domain.Agendamento;
 import com.medicare.medsystem.domain.Dto.InserirPessoaDto;
-import com.medicare.medsystem.domain.Dto.ListarAgendamentoDto;
 import com.medicare.medsystem.domain.Dto.ListarPessoaDto;
 import com.medicare.medsystem.domain.Pessoa;
 import com.medicare.medsystem.repository.IPessoaRepository;
+import com.medicare.medsystem.service.base.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PessoaService extends BaseService<Pessoa>{
+public class PessoaService extends BaseService<Pessoa> {
     @Autowired
     private IPessoaRepository repository;
     @Autowired

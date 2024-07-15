@@ -3,6 +3,7 @@ package com.medicare.medsystem.service;
 import com.medicare.medsystem.domain.Dto.InserirSemanalDto;
 import com.medicare.medsystem.domain.GradeHorario;
 import com.medicare.medsystem.repository.IGradeHorarioRepository;
+import com.medicare.medsystem.service.base.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class GradeHorarioService extends BaseService<GradeHorario>{
+public class GradeHorarioService extends BaseService<GradeHorario> {
     @Autowired
     private IGradeHorarioRepository repository;
 
