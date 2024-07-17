@@ -1,5 +1,6 @@
 package com.medicare.medsystem.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.medicare.medsystem.domain.Base.IBaseEntity;
 import com.medicare.medsystem.domain.Enum.EnumTipoAgendamento;
 import jakarta.persistence.*;
@@ -7,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -14,7 +18,10 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Agendamento implements IBaseEntity {
+public class Agendamento implements IBaseEntity, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "idagendamento")

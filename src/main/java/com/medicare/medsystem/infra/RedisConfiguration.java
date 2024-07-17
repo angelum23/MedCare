@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 public class RedisConfiguration {
     private final String redisHost = "localhost";
-    private final int redisPort = 6379;
+    private final Integer redisPort = 6379;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {

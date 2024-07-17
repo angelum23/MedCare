@@ -24,7 +24,7 @@ public class AgendamentoController extends BaseController<Agendamento> {
     @GetMapping("/RecuperarDia")
     public ResponseEntity<Object> recuperarDia() {
         try {
-            var registros = service.recuperarPorDia(Optional.empty());
+            var registros = service.recuperarHoje();
             return Success(registros);
         } catch (Exception e){
             return Error("Erro ao recuperar agendamentos do dia! " + e.getMessage());

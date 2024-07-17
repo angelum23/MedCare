@@ -7,6 +7,7 @@ import com.medicare.medsystem.domain.Enum.EnumTipoAgendamento;
 import com.medicare.medsystem.repository.IAgendamentoRepository;
 import com.medicare.medsystem.repository.IGradeHorarioRepository;
 import com.medicare.medsystem.service.base.BaseService;
+import com.medicare.medsystem.service.base.ICacheListService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +26,9 @@ public class AgendamentoService extends BaseService<Agendamento> {
     private IGradeHorarioRepository gradeHorarioRepository;
     @Autowired
     private DocumentoService documentoService;
+    @Autowired ICacheListService<Agendamento> cache;
+
+    private final String AgendamentoDiarioCacheKey = "agendaDia";
 
     @Override
     protected JpaRepository<Agendamento, Integer> getRepository() {
@@ -33,9 +37,41 @@ public class AgendamentoService extends BaseService<Agendamento> {
 
     @Override
     public Integer salvar(Agendamento agendamento) throws Exception {
-        validarSeExisteGradeNoHorario(agendamento);
-        validarHorarioNaoAgendado(agendamento);
+        //validarSeExisteGradeNoHorario(agendamento);
+        //validarHorarioNaoAgendado(agendamento);
+
+        salvarCache(agendamento);
+
         return super.salvar(agendamento);
+    }
+
+    @Override
+    public void remover(Integer id) throws Exception {
+        super.remover(id);
+        cache.clearList(AgendamentoDiarioCacheKey);
+    }
+
+    private void salvarCache(Agendamento agendamento) {
+        var registrosCache = cache.getList(AgendamentoDiarioCacheKey);
+
+        if(registrosCache.isEmpty()) {
+            cache.rightPush(AgendamentoDiarioCacheKey, agendamento);
+            return;
+        }
+
+        if(agendamento.getId() > 0) {
+            cache.clearList(AgendamentoDiarioCacheKey);
+            return;
+        }
+
+        var diaInicioCache = registrosCache.get(0).getHoraInicio().getDate();
+        var diaInicioAgendamento = agendamento.getHoraInicio().getDate();
+
+        if(diaInicioCache != diaInicioAgendamento) {
+            cache.clearList(AgendamentoDiarioCacheKey);
+        }
+
+        cache.rightPush(AgendamentoDiarioCacheKey, agendamento);
     }
 
     private void validarHorarioNaoAgendado(Agendamento agendamento) {
@@ -60,17 +96,22 @@ public class AgendamentoService extends BaseService<Agendamento> {
         }
     }
 
-    public List<Agendamento> recuperarPorDia(Optional<Date> data) {
-        Date inicio;
-        inicio = data.isPresent() ? DateUtils.truncate(data.get(), Calendar.DATE)
-                                  : DateUtils.truncate(new Date(), Calendar.DATE);
+    public List<Agendamento> recuperarPorDia(Date data) {
+        Date inicio = DateUtils.truncate(data, Calendar.DATE);
         var fim = DateUtils.addDays(inicio, 1);
 
         return repository.findAllByHoraInicioGreaterThanEqualAndHoraFimLessThanEqualAndRemovidoIsFalse(inicio, fim);
     }
 
+    public List<Agendamento> recuperarHoje() {
+        var agendamentosCacheados = cache.getList(AgendamentoDiarioCacheKey);
+        if(agendamentosCacheados != null) return agendamentosCacheados;
+
+        return recuperarPorDia(new Date());
+    }
+
     public void folgar(Date data) throws Exception{
-        var agendamentos = recuperarPorDia(Optional.ofNullable(data));
+        var agendamentos = recuperarPorDia(data);
         agendamentos.forEach(agendamento -> agendamento.setRemovido(true));
         repository.saveAll(agendamentos);
 
@@ -90,7 +131,7 @@ public class AgendamentoService extends BaseService<Agendamento> {
             documentoService.salvar(agendamentoDto.documento().get());
         }
 
-        return super.salvar(agendamentoDto.agendamento());
+        return salvar(agendamentoDto.agendamento());
     }
 
     public List<Agendamento> listar(ListarAgendamentoDto dto) throws Exception {
