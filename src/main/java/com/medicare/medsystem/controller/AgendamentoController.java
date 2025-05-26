@@ -5,6 +5,7 @@ import com.medicare.medsystem.domain.Agendamento;
 import com.medicare.medsystem.domain.Dto.InserirAgendamentoDto;
 import com.medicare.medsystem.domain.Dto.ListarAgendamentoDto;
 import com.medicare.medsystem.service.AgendamentoService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +43,7 @@ public class AgendamentoController extends BaseController<Agendamento> {
     }
 
     @PostMapping("/Folgar")
-    public ResponseEntity<Object> folgar(@RequestParam("dia") Date diaFolga) {
+    public ResponseEntity<Object> folgar(@RequestParam("dia") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date diaFolga) {
         try {
             service.folgar(diaFolga);
             return Success("Folga registrada com sucesso");

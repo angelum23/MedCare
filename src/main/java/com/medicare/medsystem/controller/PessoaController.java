@@ -7,6 +7,8 @@ import com.medicare.medsystem.domain.Pessoa;
 import com.medicare.medsystem.service.PessoaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.medicare.medsystem.domain.Enum.EnumTipoPessoa;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/Pessoa")
@@ -19,11 +21,18 @@ public class PessoaController extends BaseController<Pessoa> {
     }
 
     @GetMapping("/ListarPessoa")
-    public ResponseEntity<Object> listar(@RequestBody ListarPessoaDto filtrosPessoa) {
+    public ResponseEntity<Object> listar(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int rowsPerPage,
+            @RequestParam(required = false) String tipo) {
         try {
+            EnumTipoPessoa enumTipo = tipo != null ? EnumTipoPessoa.valueOf(tipo) : null;
+            var filtrosPessoa = new ListarPessoaDto(page, rowsPerPage, enumTipo);
             var pessoasEncontradas = service.listar(filtrosPessoa);
             return Success(pessoasEncontradas);
-        } catch (Exception e){
+        } catch (IllegalArgumentException e) {
+            return Error("Tipo de pessoa inválido. Tipos válidos: " + Arrays.toString(EnumTipoPessoa.values()));
+        } catch (Exception e) {
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }
     }

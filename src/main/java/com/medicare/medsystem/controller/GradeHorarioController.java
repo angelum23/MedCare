@@ -20,7 +20,7 @@ public class GradeHorarioController extends BaseController<GradeHorario> {
         this.service = service;
     }
 
-    @GetMapping("/ListarGradeHorario")
+    @PostMapping("/ListarGradeHorario")
     public ResponseEntity<Object> listar(@RequestBody ListarDto filtros) {
         try {
             var listaDeHorarios = service.listar(filtros, Optional.empty());
