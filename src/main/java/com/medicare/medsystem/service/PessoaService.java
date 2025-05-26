@@ -24,19 +24,19 @@ public class PessoaService extends BaseService<Pessoa> {
         return repository;
     }
 
-    public Integer salvarComFoto(InserirPessoaDto pessoaDto) throws Exception {
-        if(pessoaDto.documento().isPresent()) {
-            documentoService.salvar(pessoaDto.documento().get());
+    public Integer salvarComFoto(InserirPessoaDto dadosPessoa) throws Exception {
+        if(dadosPessoa.documento().isPresent()) {
+            documentoService.salvar(dadosPessoa.documento().get());
         }
 
-        return super.salvar(pessoaDto.pessoa());
+        return super.salvar(dadosPessoa.pessoa());
     }
 
-    public List<Pessoa> listar(ListarPessoaDto dto) throws Exception {
-        exceptionSeNull(dto.getTipo(), Optional.of("Tipo de pessoa não informado!"));
+    public List<Pessoa> listar(ListarPessoaDto filtros) throws Exception {
+        exceptionSeNull(filtros.getTipo(), Optional.of("Tipo de pessoa não informado!"));
 
-        var pessoas = repository.findAllByTipoEqualsAndRemovidoIsFalse(dto.getTipo());
+        var pessoasFiltradas = repository.findAllByTipoEqualsAndRemovidoIsFalse(filtros.getTipo());
 
-        return super.listar(dto, Optional.ofNullable(pessoas));
+        return super.listar(filtros, Optional.ofNullable(pessoasFiltradas));
     }
 }

@@ -22,8 +22,8 @@ public abstract class BaseController<T extends IBaseEntity> {
     @GetMapping("/Recuperar")
     public ResponseEntity<Object> recuperar(@RequestParam("id") Integer id) {
         try {
-            var registro = service.recuperar(id);
-            return Success(registro);
+            var entidadeRecuperada = service.recuperar(id);
+            return Success(entidadeRecuperada);
         } catch (Exception e){
             return Error("Erro ao recuperar registro! " + e.getMessage());
         }
@@ -32,27 +32,27 @@ public abstract class BaseController<T extends IBaseEntity> {
     @GetMapping("/RecuperarTodos")
     public ResponseEntity<Object> recuperar() {
         try {
-            var registro = service.recuperar();
-            return Success(registro);
+            var entidadesRecuperadas = service.recuperar();
+            return Success(entidadesRecuperadas);
         } catch (Exception e){
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }
     }
 
     @GetMapping("/Listar")
-    public ResponseEntity<Object> listar(@RequestBody ListarDto dto) {
+    public ResponseEntity<Object> listar(@RequestBody ListarDto filtros) {
         try {
-            var registros = service.listar(dto, Optional.empty());
-            return Success(registros);
+            var listaFiltrada = service.listar(filtros, Optional.empty());
+            return Success(listaFiltrada);
         } catch (Exception e){
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }
     }
 
     @PostMapping("/Inserir")
-    public ResponseEntity<Object> inserir(@RequestBody T entidade) {
+    public ResponseEntity<Object> inserir(@RequestBody T dadosEntrada) {
         try {
-            Integer id = service.salvar(entidade);
+            Integer id = service.salvar(dadosEntrada);
             return Success("Registro inserido com sucesso: " + id);
         } catch(Exception e) {
             return Error("Erro ao inserir registro! " + e.getMessage());
@@ -62,8 +62,8 @@ public abstract class BaseController<T extends IBaseEntity> {
     @PutMapping("/Alterar")
     public ResponseEntity<Object> alterar(@RequestBody T entidade) {
         try {
-            Integer id = service.salvar(entidade);
-            return Success("Registro alterado com sucesso: " + id);
+            Integer idEntidade = service.salvar(entidade);
+            return Success("Registro alterado com sucesso: " + idEntidade);
         } catch(Exception e) {
             return Error("Erro ao alterar registro! " + e.getMessage());
         }
@@ -88,8 +88,8 @@ public abstract class BaseController<T extends IBaseEntity> {
         return ResponseEntity.status(200).body(entidade);
     }
 
-    public ResponseEntity<Object> Success(List<T> entidade) {
-        return ResponseEntity.status(200).body(entidade);
+    public ResponseEntity<Object> Success(List<T> listaEntidades) {
+        return ResponseEntity.status(200).body(listaEntidades);
     }
 
     public ResponseEntity<Object> Error(String texto) {

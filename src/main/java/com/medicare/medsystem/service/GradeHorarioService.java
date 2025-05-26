@@ -22,34 +22,34 @@ public class GradeHorarioService extends BaseService<GradeHorario> {
     }
 
     @Override
-    public Integer salvar(GradeHorario entity) throws Exception {
-        validarSeExisteGradeNoHorario(entity);
-        return super.salvar(entity);
+    public Integer salvar(GradeHorario gradeHorario) throws Exception {
+        validarSeExisteGradeNoHorario(gradeHorario);
+        return super.salvar(gradeHorario);
     }
 
-    public List<Integer> inserirSemanal(InserirSemanalDto dto) throws Exception{
-        List<Integer> ids = new ArrayList<>();
+    public List<Integer> inserirSemanal(InserirSemanalDto dadosGradeSemanal) throws Exception{
+        List<Integer> idsCriados = new ArrayList<>();
 
-        ids.add(super.salvar(dto.segunda()));
-        ids.add(super.salvar(dto.terca()));
-        ids.add(super.salvar(dto.quarta()));
-        ids.add(super.salvar(dto.quinta()));
-        ids.add(super.salvar(dto.sexta()));
-        ids.add(super.salvar(dto.sabado()));
-        ids.add(super.salvar(dto.domingo()));
+        idsCriados.add(super.salvar(dadosGradeSemanal.segunda()));
+        idsCriados.add(super.salvar(dadosGradeSemanal.terca()));
+        idsCriados.add(super.salvar(dadosGradeSemanal.quarta()));
+        idsCriados.add(super.salvar(dadosGradeSemanal.quinta()));
+        idsCriados.add(super.salvar(dadosGradeSemanal.sexta()));
+        idsCriados.add(super.salvar(dadosGradeSemanal.sabado()));
+        idsCriados.add(super.salvar(dadosGradeSemanal.domingo()));
 
-        return ids;
+        return idsCriados;
     }
 
 
     private void validarSeExisteGradeNoHorario(GradeHorario gradeHorario) {
-        var horariosJaExistentes = repository.findAllByDiaSemanaEqualsAndInicioExpedienteGreaterThanEqualAndFimExpedienteLessThanEqualAndRemovidoIsFalse(
+        var horariosConflitantes = repository.findAllByDiaSemanaEqualsAndInicioExpedienteGreaterThanEqualAndFimExpedienteLessThanEqualAndRemovidoIsFalse(
                 gradeHorario.getDiaSemana(),
                 gradeHorario.getInicioExpediente(),
                 gradeHorario.getFimExpediente()
         );
 
-        if(!horariosJaExistentes.isEmpty()) {
+        if(!horariosConflitantes.isEmpty()) {
             throw new IllegalArgumentException("Este horário está agendado, por favor escolha outro");
         }
     }

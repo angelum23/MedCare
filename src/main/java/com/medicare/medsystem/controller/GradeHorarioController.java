@@ -21,21 +21,21 @@ public class GradeHorarioController extends BaseController<GradeHorario> {
     }
 
     @GetMapping("/ListarGradeHorario")
-    public ResponseEntity<Object> listar(@RequestBody ListarDto dto) {
+    public ResponseEntity<Object> listar(@RequestBody ListarDto filtros) {
         try {
-            var registros = service.listar(dto, Optional.empty());
-            return Success(registros);
+            var listaDeHorarios = service.listar(filtros, Optional.empty());
+            return Success(listaDeHorarios);
         } catch (Exception e){
             return Error("Erro ao recuperar grades de horário! " + e.getMessage());
         }
     }
 
     @PostMapping("/InserirSemanal")
-    public ResponseEntity<Object> inserirSemanal(@RequestBody InserirSemanalDto dto) {
+    public ResponseEntity<Object> inserirSemanal(@RequestBody InserirSemanalDto dadosGradeSemanal) {
         try {
-            List<Integer> ids = service.inserirSemanal(dto);
-            List<String> idsString = ids.stream().map(String::valueOf).toList();
-            return Success("Registros inseridos com sucesso: " + String.join(", ", idsString));
+            List<Integer> idsCriados = service.inserirSemanal(dadosGradeSemanal);
+            List<String> idsFormatados = idsCriados.stream().map(String::valueOf).toList();
+            return Success("Registros inseridos com sucesso: " + String.join(", ", idsFormatados));
         } catch (Exception e){
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }

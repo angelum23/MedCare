@@ -2,11 +2,14 @@ package com.medicare.medsystem.service.base;
 
 import com.medicare.medsystem.domain.Base.IBaseEntity;
 import com.medicare.medsystem.domain.Dto.ListarDto;
+import com.medicare.medsystem.utils.Paginador;
+import com.medicare.medsystem.utils.ValidacaoUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,18 +24,18 @@ public abstract class BaseService<T extends IBaseEntity> {
         return getRepository().findAll();
     }
 
-    public Integer salvar(T entidade) throws Exception {
-        entidade = getRepository().save(entidade);
-        return entidade.getId();
+    public Integer salvar(T registro) throws Exception {
+        registro = getRepository().save(registro);
+        return registro.getId();
     }
 
     public void remover(Integer id) throws Exception {
         exceptionSeNaoExiste(id);
 
-        var entidade = getRepository().findById(id).orElseThrow();
-        entidade.setRemovido(true);
+        var registro = getRepository().findById(id).orElseThrow();
+        registro.setRemovido(true);
 
-        getRepository().save(entidade);
+        getRepository().save(registro);
     }
 
     private void exceptionSeNaoExiste(Integer id) throws Exception {
@@ -41,26 +44,21 @@ public abstract class BaseService<T extends IBaseEntity> {
         throw new Exception("Registro não encontrado");
     }
 
-    public List<T> listar(ListarDto dto, Optional<List<T>> registrosParam) throws Exception {
-        exceptionSeNull(dto, Optional.of("Filtros não informados"));
-        exceptionSeNull(dto.getPage(), Optional.of("Pagina não informada"));
-        exceptionSeNull(dto.getRowsPerPage(), Optional.of("Quantidade de linhas por pagina não informada"));
+    public List<T> listar(ListarDto filtros, Optional<List<T>> registrosFiltrados) throws Exception {
+        // Validações
+        Objects.requireNonNull(filtros, "Filtros não informados");
+        ValidacaoUtils.validarMaiorQueZero(filtros.getPage(), "Número da página inválido");
+        ValidacaoUtils.validarMaiorQueZero(filtros.getRowsPerPage(), "Quantidade de itens por página inválida");
 
-        var registros = registrosParam.orElseGet(() -> getRepository().findAll());
+        // Obtém todos os registros (filtrados ou não)
+        List<T> todosRegistros = registrosFiltrados.orElseGet(this::recuperar);
 
-        var quantidadeSkip = (dto.getPage() - 1) * dto.getRowsPerPage();
-
-        if(registros.size() < quantidadeSkip) {
-            throw new IllegalArgumentException("Nenhum registro encontrado");
-        }
-
-        var pagina = registros.stream().skip(quantidadeSkip).limit(dto.getRowsPerPage()).toList();
-        return pagina;
+        // Aplica a paginação
+        return Paginador.paginar(todosRegistros, filtros.getPage(), filtros.getRowsPerPage());
     }
 
-    public void exceptionSeNull(Object reg, Optional<String> mensagemErro) throws Exception {
-        if (reg == null) {
-            throw new Exception(mensagemErro.orElse("Registro não encontrado!"));
-        }
+    @Deprecated
+    public void exceptionSeNull(Object valor, Optional<String> mensagemErro) throws Exception {
+        ValidacaoUtils.validarNaoNulo(valor, mensagemErro.orElse("Registro não encontrado!"));
     }
 }

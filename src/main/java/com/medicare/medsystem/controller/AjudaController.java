@@ -12,7 +12,7 @@ public class AjudaController {
     @GetMapping("")
     public ResponseEntity<Object> recuperar() {
         String[] estudantes = {"Ângelo José da Rosa", "Gabriel Macieski"};
-        var retorno = new ProjetoInfo(estudantes, "MedCare", "Saúde e Bem estar: Mapeamento de atendimentos médicos");
-        return ResponseEntity.status(500).body(retorno);
+        var infoProjeto = new ProjetoInfo(estudantes, "MedCare", "Saúde e Bem estar: Mapeamento de atendimentos médicos");
+        return ResponseEntity.status(200).body(infoProjeto);
     }
 }

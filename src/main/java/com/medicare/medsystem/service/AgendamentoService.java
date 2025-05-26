@@ -28,7 +28,7 @@ public class AgendamentoService extends BaseService<Agendamento> {
     private DocumentoService documentoService;
     @Autowired ICacheListService<Agendamento> cache;
 
-    private final String AgendamentoDiarioCacheKey = "agendaDia";
+    private static final String AGENDAMENTO_DIARIO_CACHE_KEY = "agendaDia";
 
     @Override
     protected JpaRepository<Agendamento, Integer> getRepository() {
@@ -48,30 +48,29 @@ public class AgendamentoService extends BaseService<Agendamento> {
     @Override
     public void remover(Integer id) throws Exception {
         super.remover(id);
-        cache.clearList(AgendamentoDiarioCacheKey);
+        cache.clearList(AGENDAMENTO_DIARIO_CACHE_KEY);
     }
 
     private void salvarCache(Agendamento agendamento) {
-        var registrosCache = cache.getList(AgendamentoDiarioCacheKey);
+        var agendamentosCacheados = cache.getList(AGENDAMENTO_DIARIO_CACHE_KEY);
 
-        if(registrosCache.isEmpty()) {
-            cache.rightPush(AgendamentoDiarioCacheKey, agendamento);
+        if(agendamentosCacheados.isEmpty()) {
+            cache.rightPush(AGENDAMENTO_DIARIO_CACHE_KEY, agendamento);
             return;
         }
 
         if(agendamento.getId() > 0) {
-            cache.clearList(AgendamentoDiarioCacheKey);
+            cache.clearList(AGENDAMENTO_DIARIO_CACHE_KEY);
             return;
         }
+        var diaCache = agendamentosCacheados.get(0).getHoraInicio().getDate();
+        var diaNovoAgendamento = agendamento.getHoraInicio().getDate();
 
-        var diaInicioCache = registrosCache.get(0).getHoraInicio().getDate();
-        var diaInicioAgendamento = agendamento.getHoraInicio().getDate();
-
-        if(diaInicioCache != diaInicioAgendamento) {
-            cache.clearList(AgendamentoDiarioCacheKey);
+        if(diaCache != diaNovoAgendamento) {
+            cache.clearList(AGENDAMENTO_DIARIO_CACHE_KEY);
         }
 
-        cache.rightPush(AgendamentoDiarioCacheKey, agendamento);
+        cache.rightPush(AGENDAMENTO_DIARIO_CACHE_KEY, agendamento);
     }
 
     private void validarHorarioNaoAgendado(Agendamento agendamento) {
@@ -97,48 +96,48 @@ public class AgendamentoService extends BaseService<Agendamento> {
     }
 
     public List<Agendamento> recuperarPorDia(Date data) {
-        Date inicio = DateUtils.truncate(data, Calendar.DATE);
-        var fim = DateUtils.addDays(inicio, 1);
+        Date dataInicio = DateUtils.truncate(data, Calendar.DATE);
+        var dataFim = DateUtils.addDays(dataInicio, 1);
 
-        return repository.findAllByHoraInicioGreaterThanEqualAndHoraFimLessThanEqualAndRemovidoIsFalse(inicio, fim);
+        return repository.findAllByHoraInicioGreaterThanEqualAndHoraFimLessThanEqualAndRemovidoIsFalse(dataInicio, dataFim);
     }
 
     public List<Agendamento> recuperarHoje() {
-        var agendamentosCacheados = cache.getList(AgendamentoDiarioCacheKey);
+        var agendamentosCacheados = cache.getList(AGENDAMENTO_DIARIO_CACHE_KEY);
         if(agendamentosCacheados != null) return agendamentosCacheados;
 
         return recuperarPorDia(new Date());
     }
 
     public void folgar(Date data) throws Exception{
-        var agendamentos = recuperarPorDia(data);
-        agendamentos.forEach(agendamento -> agendamento.setRemovido(true));
-        repository.saveAll(agendamentos);
+        var agendamentosDoDia = recuperarPorDia(data);
+        agendamentosDoDia.forEach(agendamento -> agendamento.setRemovido(true));
+        repository.saveAll(agendamentosDoDia);
 
         var dataInicio = DateUtils.truncate(data, Calendar.DATE);
         var dataFim = DateUtils.addDays(data, 1);
 
-        var folga = new Agendamento();
-        folga.setTipo(EnumTipoAgendamento.Folga);
-        folga.setHoraInicio(dataInicio);
-        folga.setHoraFim(dataFim);
+        var registroDeFolga = new Agendamento();
+        registroDeFolga.setTipo(EnumTipoAgendamento.Folga);
+        registroDeFolga.setHoraInicio(dataInicio);
+        registroDeFolga.setHoraFim(dataFim);
 
-        salvar(folga);
+        salvar(registroDeFolga);
     }
 
-    public Integer salvarComDocumento(InserirAgendamentoDto agendamentoDto) throws Exception{
-        if(agendamentoDto.documento().isPresent()) {
-            documentoService.salvar(agendamentoDto.documento().get());
+    public Integer salvarComDocumento(InserirAgendamentoDto dadosAgendamento) throws Exception{
+        if(dadosAgendamento.documento().isPresent()) {
+            documentoService.salvar(dadosAgendamento.documento().get());
         }
 
-        return salvar(agendamentoDto.agendamento());
+        return salvar(dadosAgendamento.agendamento());
     }
 
-    public List<Agendamento> listar(ListarAgendamentoDto dto) throws Exception {
-        exceptionSeNull(dto.getTipo(), Optional.of("Tipo de agendamento não informado!"));
+    public List<Agendamento> listar(ListarAgendamentoDto filtros) throws Exception {
+        exceptionSeNull(filtros.getTipo(), Optional.of("Tipo de agendamento não informado!"));
 
-        var agendamentos = repository.findAllByTipoEqualsAndRemovidoIsFalse(dto.getTipo());
+        var agendamentosFiltrados = repository.findAllByTipoEqualsAndRemovidoIsFalse(filtros.getTipo());
 
-        return super.listar(dto, Optional.ofNullable(agendamentos));
+        return super.listar(filtros, Optional.ofNullable(agendamentosFiltrados));
     }
 }

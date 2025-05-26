@@ -19,32 +19,32 @@ public class PessoaController extends BaseController<Pessoa> {
     }
 
     @GetMapping("/ListarPessoa")
-    public ResponseEntity<Object> listar(@RequestBody ListarPessoaDto dto) {
+    public ResponseEntity<Object> listar(@RequestBody ListarPessoaDto filtrosPessoa) {
         try {
-            var registros = service.listar(dto);
-            return Success(registros);
+            var pessoasEncontradas = service.listar(filtrosPessoa);
+            return Success(pessoasEncontradas);
         } catch (Exception e){
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }
     }
 
     @PostMapping("/InserirPessoa")
-    public ResponseEntity<Object> inserir(@RequestBody InserirPessoaDto entidade) {
+    public ResponseEntity<Object> inserir(@RequestBody InserirPessoaDto dadosPessoa) {
         try {
-            Integer id = service.salvarComFoto(entidade);
-            return Success("Registro inserido com sucesso: " + id);
+            Integer idPessoa = service.salvarComFoto(dadosPessoa);
+            return Success("Registro inserido com sucesso: " + idPessoa);
         } catch(Exception e) {
             return Error("Erro ao inserir registro! " + e.getMessage());
         }
     }
 
     @PutMapping("/AlterarPessoa")
-    public ResponseEntity<Object> alterar(@RequestBody InserirPessoaDto entidade) {
+    public ResponseEntity<Object> alterar(@RequestBody InserirPessoaDto dadosAtualizacao) {
         try {
-            Integer id = service.salvarComFoto(entidade);
-            return Success("Registro alterado com sucesso: " + id);
+            Integer idPessoa = service.salvarComFoto(dadosAtualizacao);
+            return Success("Registro alterado com sucesso: " + idPessoa);
         } catch(Exception e) {
-            return Error("Erro ao alterado registro! " + e.getMessage());
+            return Error("Erro ao alterar registro! " + e.getMessage());
         }
     }
 }
