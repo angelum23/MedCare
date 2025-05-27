@@ -25,7 +25,7 @@ public class PessoaService extends BaseService<Pessoa> {
     }
 
     public Integer salvarComFoto(InserirPessoaDto dadosPessoa) throws Exception {
-        if(dadosPessoa.documento().isPresent()) {
+        if (dadosPessoa.documento().isPresent()) {
             documentoService.salvar(dadosPessoa.documento().get());
         }
 

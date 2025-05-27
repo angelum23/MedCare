@@ -27,7 +27,7 @@ public class GradeHorarioService extends BaseService<GradeHorario> {
         return super.salvar(gradeHorario);
     }
 
-    public List<Integer> inserirSemanal(InserirSemanalDto dadosGradeSemanal) throws Exception{
+    public List<Integer> inserirSemanal(InserirSemanalDto dadosGradeSemanal) throws Exception {
         List<Integer> idsCriados = new ArrayList<>();
 
         idsCriados.add(super.salvar(dadosGradeSemanal.segunda()));
@@ -49,7 +49,7 @@ public class GradeHorarioService extends BaseService<GradeHorario> {
                 gradeHorario.getFimExpediente()
         );
 
-        if(!horariosConflitantes.isEmpty()) {
+        if (!horariosConflitantes.isEmpty()) {
             throw new IllegalArgumentException("Este horário está agendado, por favor escolha outro");
         }
     }

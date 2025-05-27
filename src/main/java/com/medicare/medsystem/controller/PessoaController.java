@@ -42,7 +42,7 @@ public class PessoaController extends BaseController<Pessoa> {
         try {
             Integer idPessoa = service.salvarComFoto(dadosPessoa);
             return Success("Registro inserido com sucesso: " + idPessoa);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Error("Erro ao inserir registro! " + e.getMessage());
         }
     }
@@ -52,7 +52,7 @@ public class PessoaController extends BaseController<Pessoa> {
         try {
             Integer idPessoa = service.salvarComFoto(dadosAtualizacao);
             return Success("Registro alterado com sucesso: " + idPessoa);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Error("Erro ao alterar registro! " + e.getMessage());
         }
     }

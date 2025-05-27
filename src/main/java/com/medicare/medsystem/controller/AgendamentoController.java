@@ -27,7 +27,7 @@ public class AgendamentoController extends BaseController<Agendamento> {
         try {
             var listaAgendamentos = service.recuperarHoje();
             return Success(listaAgendamentos);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Error("Erro ao recuperar agendamentos do dia! " + e.getMessage());
         }
     }
@@ -47,7 +47,7 @@ public class AgendamentoController extends BaseController<Agendamento> {
         try {
             service.folgar(diaFolga);
             return Success("Folga registrada com sucesso");
-        } catch (Exception e){
+        } catch (Exception e) {
             return Error("Erro ao criar folga! " + e.getMessage());
         }
     }
@@ -57,7 +57,7 @@ public class AgendamentoController extends BaseController<Agendamento> {
         try {
             Integer idAgendamento = service.salvarComDocumento(dadosAgendamento);
             return Success("Agendamento inserido com sucesso: " + idAgendamento);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Error("Erro ao inserir agendamento! " + e.getMessage());
         }
     }
@@ -67,7 +67,7 @@ public class AgendamentoController extends BaseController<Agendamento> {
         try {
             Integer idAgendamento = service.salvarComDocumento(dadosAtualizacao);
             return Success("Agendamento alterado com sucesso: " + idAgendamento);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Error("Erro ao alterar agendamento! " + e.getMessage());
         }
     }

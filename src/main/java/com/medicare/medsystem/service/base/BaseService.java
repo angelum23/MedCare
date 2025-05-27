@@ -39,7 +39,9 @@ public abstract class BaseService<T extends IBaseEntity> {
     }
 
     private void exceptionSeNaoExiste(Integer id) throws Exception {
-        if (getRepository().existsById(id)) return;
+        if (getRepository().existsById(id)) {
+            return;
+        }
 
         throw new Exception("Registro não encontrado");
     }

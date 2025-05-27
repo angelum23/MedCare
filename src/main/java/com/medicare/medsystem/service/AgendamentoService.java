@@ -54,19 +54,19 @@ public class AgendamentoService extends BaseService<Agendamento> {
     private void salvarCache(Agendamento agendamento) {
         var agendamentosCacheados = cache.getList(AGENDAMENTO_DIARIO_CACHE_KEY);
 
-        if(agendamentosCacheados.isEmpty()) {
+        if (agendamentosCacheados.isEmpty()) {
             cache.rightPush(AGENDAMENTO_DIARIO_CACHE_KEY, agendamento);
             return;
         }
 
-        if(agendamento.getId() > 0) {
+        if (agendamento.getId() > 0) {
             cache.clearList(AGENDAMENTO_DIARIO_CACHE_KEY);
             return;
         }
         var diaCache = agendamentosCacheados.get(0).getHoraInicio().getDate();
         var diaNovoAgendamento = agendamento.getHoraInicio().getDate();
 
-        if(diaCache != diaNovoAgendamento) {
+        if (diaCache != diaNovoAgendamento) {
             cache.clearList(AGENDAMENTO_DIARIO_CACHE_KEY);
         }
 
@@ -79,7 +79,7 @@ public class AgendamentoService extends BaseService<Agendamento> {
             agendamento.getHoraFim()
         );
 
-        if(!agendamentos.isEmpty()) {
+        if (!agendamentos.isEmpty()) {
             throw new IllegalArgumentException("Este horário já está agendado, por favor escolha outro");
         }
     }
@@ -90,7 +90,7 @@ public class AgendamentoService extends BaseService<Agendamento> {
             agendamento.getHoraFim()
         );
 
-        if(gradeHorarios.isEmpty()) {
+        if (gradeHorarios.isEmpty()) {
             throw new IllegalArgumentException("Nenhum horário disponível para o agendamento");
         }
     }
@@ -104,12 +104,14 @@ public class AgendamentoService extends BaseService<Agendamento> {
 
     public List<Agendamento> recuperarHoje() {
         var agendamentosCacheados = cache.getList(AGENDAMENTO_DIARIO_CACHE_KEY);
-        if(agendamentosCacheados != null) return agendamentosCacheados;
+        if (agendamentosCacheados != null) {
+            return agendamentosCacheados;
+        }
 
         return recuperarPorDia(new Date());
     }
 
-    public void folgar(Date data) throws Exception{
+    public void folgar(Date data) throws Exception {
         var agendamentosDoDia = recuperarPorDia(data);
         agendamentosDoDia.forEach(agendamento -> agendamento.setRemovido(true));
         repository.saveAll(agendamentosDoDia);
@@ -125,8 +127,8 @@ public class AgendamentoService extends BaseService<Agendamento> {
         salvar(registroDeFolga);
     }
 
-    public Integer salvarComDocumento(InserirAgendamentoDto dadosAgendamento) throws Exception{
-        if(dadosAgendamento.documento().isPresent()) {
+    public Integer salvarComDocumento(InserirAgendamentoDto dadosAgendamento) throws Exception {
+        if (dadosAgendamento.documento().isPresent()) {
             documentoService.salvar(dadosAgendamento.documento().get());
         }
 

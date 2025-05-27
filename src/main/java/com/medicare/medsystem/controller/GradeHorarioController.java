@@ -25,7 +25,7 @@ public class GradeHorarioController extends BaseController<GradeHorario> {
         try {
             var listaDeHorarios = service.listar(filtros, Optional.empty());
             return Success(listaDeHorarios);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Error("Erro ao recuperar grades de horário! " + e.getMessage());
         }
     }
@@ -36,7 +36,7 @@ public class GradeHorarioController extends BaseController<GradeHorario> {
             List<Integer> idsCriados = service.inserirSemanal(dadosGradeSemanal);
             List<String> idsFormatados = idsCriados.stream().map(String::valueOf).toList();
             return Success("Registros inseridos com sucesso: " + String.join(", ", idsFormatados));
-        } catch (Exception e){
+        } catch (Exception e) {
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }
     }

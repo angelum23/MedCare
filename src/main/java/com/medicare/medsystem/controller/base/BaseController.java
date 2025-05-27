@@ -24,7 +24,7 @@ public abstract class BaseController<T extends IBaseEntity> {
         try {
             var entidadeRecuperada = service.recuperar(id);
             return Success(entidadeRecuperada);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Error("Erro ao recuperar registro! " + e.getMessage());
         }
     }
@@ -34,7 +34,7 @@ public abstract class BaseController<T extends IBaseEntity> {
         try {
             var entidadesRecuperadas = service.recuperar();
             return Success(entidadesRecuperadas);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }
     }
@@ -44,7 +44,7 @@ public abstract class BaseController<T extends IBaseEntity> {
         try {
             var listaFiltrada = service.listar(filtros, Optional.empty());
             return Success(listaFiltrada);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Error("Erro ao recuperar registros! " + e.getMessage());
         }
     }
@@ -54,7 +54,7 @@ public abstract class BaseController<T extends IBaseEntity> {
         try {
             Integer id = service.salvar(dadosEntrada);
             return Success("Registro inserido com sucesso: " + id);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Error("Erro ao inserir registro! " + e.getMessage());
         }
     }
@@ -64,7 +64,7 @@ public abstract class BaseController<T extends IBaseEntity> {
         try {
             Integer idEntidade = service.salvar(entidade);
             return Success("Registro alterado com sucesso: " + idEntidade);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Error("Erro ao alterar registro! " + e.getMessage());
         }
     }
@@ -75,7 +75,7 @@ public abstract class BaseController<T extends IBaseEntity> {
             service.remover(id);
             return Success("Registro removido com sucesso!");
         }
-        catch(Exception e) {
+        catch (Exception e) {
             return Error("Erro ao remover registro!" + e.getMessage());
         }
     }
