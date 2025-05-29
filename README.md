@@ -39,6 +39,107 @@ consulta de horários, agendamentos de consultas, feedbacks, retornos médicos e
 * [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
 * [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
 
+
+## Análise dos Principais Problemas Detectados e suas Estratégias de Refatoração
+
+Durante a análise do projeto original, diversos problemas foram identificados em diferentes níveis da aplicação. A seguir, listamos os principais pontos que motivaram a refatoração, juntamente com uma explicação do impacto de cada um deles:
+
+### 1. **Nomenclatura Inadequada**
+Foram encontrados diversos nomes de variáveis e métodos pouco descritivos, como `dto`, `entidade`, `id`, `registro`, entre outros, o que comprometia a legibilidade do código.
+
+> **Correção:** Todas as variáveis e métodos foram renomeados com nomes claros e semânticos, melhorando a compreensão geral do código.
+
+### 2. **Duplicação de Código**
+Havia duplicação entre lógicas de validação e resposta em diferentes endpoints, especialmente nas camadas de controller.
+
+> **Correção:** Extraímos métodos auxiliares e utilizamos classes de utilitários para consolidar essas validações.
+
+### 3. **Falta de Testes Automatizados**
+O projeto original não possuía nenhuma suíte de testes, dificultando a validação de novas alterações.
+
+> **Correção:** Foram criados testes automatizados com `JUnit` e `MockMvc` cobrindo casos de sucesso e erro para os principais controllers (`PessoaController`, `AgendamentoController`, `GradeHorarioController`).
+
+### 4. **Falta de Linter e Padronização**
+O projeto original não utilizava nenhuma ferramenta de verificação automática de estilo, o que resultava em inconsistências como espaçamento inadequado, indentação incorreta e ausência de chaves.
+
+> **Correção:** Integração com o **Checkstyle**, configurando regras como:
+- `LineLength`
+- `NeedBraces`
+- `WhitespaceAround`
+- `MethodLength`
+
+## Pontos Positivos do Projeto Original
+
+Alguns aspectos já estavam bem estruturados desde a versão original, demonstrando boas práticas já adotadas na criação do projeto inicial. Esses pontos foram mantidos por estarem dentro dos padrões de Clean Code e engenharia de software.
+
+### 1. **Estrutura Geral e Modularização**
+A divisão de pacotes como `controller`, `domain`, `dto`, `service` e `enums` já estava bem organizada, facilitando a navegação e compreensão do projeto.
+
+### 2. **Uso do Spring Boot e JPA**
+A integração com Spring Boot e o uso correto do JPA para persistência de dados já estavam implementados de forma adequada, seguindo convenções da framework.
+
+### 3. **Camadas Bem Definidas**
+A separação entre responsabilidades (controllers cuidando da API, services da lógica e domain da modelagem) já era bem respeitada.
+
+## Refatorações Realizadas
+
+As descrições das mudanças realizadas no código-fonte original foram documentadas e seguem os princípios discutidos na disciplina de Clean Code. Para detalhes específicos de cada alteração feita, consulte o arquivo [`CHANGELOG.md`](./CHANGELOG.md), onde constam as melhorias aplicadas, correções e novos recursos adicionados ao projeto.
+
+## Descrição dos Testes Implementados
+
+Durante a refatoração do projeto MedCare, foi implementada uma suíte de testes automatizados focada em cobrir os principais fluxos da aplicação, garantindo a confiabilidade das funcionalidades após alterações no código.
+
+Os testes foram escritos utilizando JUnit 5, Mockito, e Spring MockMvc, e cobrem tanto os utilitários quanto os controllers da aplicação.
+
+### Testes Unitários e de Integração Criados:
+
+- **`ValidacaoUtilsTest`**  
+  Testa os métodos de validação estáticos da aplicação.  
+  Garante que as validações de campos obrigatórios, identificações e strings estejam funcionando corretamente.  
+  Casos de sucesso e falha foram tratados.
+
+- **`PaginadorTest`**  
+  Valida o funcionamento da lógica de paginação customizada.  
+  Garante que a paginação respeita os limites e quantidade de registros esperada.
+
+- **`PessoaControllerTest`**  
+  Testa os endpoints principais do controller de Pessoa.  
+  Inclui inserção, listagem, recuperação, alteração e exclusão.  
+  Simula os casos esperados com comportamento de serviço mockado.
+
+- **`AgendamentoControllerTest`**  
+  Testa o agendamento de consultas e o registro de folgas.  
+  Inclui simulações de conflitos de horários e casos de erro na criação de agendamentos.
+
+- **`GradeHorarioControllerTest`**  
+  Testa a inserção, alteração, listagem e exclusão de horários disponíveis.  
+  Verifica também a recuperação semanal.
+
+- **`TestSecurityConfig`**  
+  Garante que os testes de controllers não sejam impactados por autenticação durante a execução.  
+  Sobrescreve a configuração de segurança original para permitir execução local dos testes.
+
+---
+
+## Linter com Checkstyle
+
+O projeto foi integrado ao **Checkstyle** para garantir uma padronização no estilo de código, identificando problemas como:
+
+- Falta de espaçamento;
+- Linhas muito longas;
+- Ausência de chaves;
+- Más práticas de indentação.
+
+A configuração utilizada está no arquivo [`checkstyle.xml`](./checkstyle.xml), que pode ser customizada conforme o padrão da equipe.
+
+### Exemplo de aplicação
+
+Abaixo, um exemplo real das sugestões feitas pelo Checkstyle diretamente no IntelliJ IDEA:
+
+![Checkstyle IntelliJ](checkstyle.png)
+
+---
+
 ## Documentação
 
 **ENDPOINTS**
@@ -55,23 +156,23 @@ http://localhost:8080/Pessoa/InserirPessoa
 ```JSON
 {
 
-“pessoa”: {
+  “pessoa”: {
 
-	“nome”: “teste1”,
-	
-	“tipo": 1,
-	
-	“identificacao”: “00000000000”
+“nome”: “teste1”,
 
-	},
+“tipo": 1,
+
+“identificacao”: “00000000000”
+
+},
 “documento”:{
-	
-	“urldocumento”: “www.teste.com/imagem.jpg”,
-	
-	“descrição”: “teste”
 
-	}
- 
+“urldocumento”: “www.teste.com/imagem.jpg”,
+
+“descrição”: “teste”
+
+}
+
 }
 ```
 
@@ -86,8 +187,8 @@ PUT
 
 http://localhost:8080/Pessoa/AlterarPessoa
 
- {
- 
+{
+
 “pessoa”: {
 
 	“nome”: “teste1”,
@@ -105,7 +206,7 @@ http://localhost:8080/Pessoa/AlterarPessoa
 	“descrição”: “teste”
 
 	}
- 
+
 }
 
 Erros esperados:
@@ -149,7 +250,7 @@ GET
 
 http://localhost:8080/Pessoa/RecuperarPessoa?id={id}
 
-Erros esperados: 
+Erros esperados:
 
 - Erro ao recuperar registro!
 
@@ -160,7 +261,7 @@ GET
 http://localhost:8080/Pessoa/RecuperarTodos
 
 Erros esperados:
- 
+
 - Erro ao recuperar registros!
 
 
@@ -196,13 +297,13 @@ http://localhost:8080/Agendamento/InserirAgendamento
     }
 
 }
-    
+
 Erros esperados:
 
 - Erro ao inserir resistro!
-  
+
 - Este horário já está agendado, por favor escolha outro”
-  
+
 - Nenhum horário disponível para o agendamento!
 
 
@@ -227,7 +328,7 @@ http://localhost:8080/Agendamento/Alterar
 	“dadosConsulta”: “teste1”,
 
  	},
- 
+
 "documento": {
 
         "urlDocumento": "www.teste.com/imagem.jpg",
@@ -235,15 +336,15 @@ http://localhost:8080/Agendamento/Alterar
         "descricao": "teste"
 	
     }
-    
+
 Erros esperados:
 
 - Erro ao alterar resgistro!
-  
+
 - Este horário já está agendado, por favor escolha outro!
-  
+
 - Nenhum horário disponível para o agendamento!
-  
+
 
 
 **3 – Listar Agendamento:**
@@ -265,7 +366,7 @@ Erros esperados:
 
 - Erro ao recuperar registros!
 
-  
+
 
 **4 – Remover Agendamento:**
 DELETE
@@ -283,25 +384,25 @@ GET
 
 http://localhost:8080/Agendamento/Recuperar?id={id}
 
-Erros esperados: 
+Erros esperados:
 
 - Erro ao recuperar registro!
-  
+
 
 
 **6 – Folgar Agendamento:**
-POST 
+POST
 
 http://localhost:8080/Agendamento/Folgar?dia={data}
 
-Erros esperados:	
+Erros esperados:
 
 - Erro ao criar folga!
-  
+
 - Este horário já está agendado, por favor escolha outro”
-  
+
 - Nenhum horário disponível para o agendamento!
-  
+
 
 **7 – RecuperarDia Agendamento:**
 GET
@@ -323,7 +424,7 @@ http://localhost:8080/Agendamento/RecuperarDia
 Erros esperados:
 
 - Erro ao recuperar agendamentos do dia!
-  
+
 
 
 **8 - RecuperarTodos Agendamento:**
@@ -334,7 +435,7 @@ http://localhost:8080/Agendamento/RecuperarTodos
 Erros esperados:
 
 - Erro ao recuperar registros!
-  
+
 
 
 **REQUISIÇÃO GRADEHORARIO**
@@ -353,13 +454,13 @@ http://localhost:8080/GradeHorario/Inserir
 “diaSemana”: “Quinta",
 
 “descrição”: “teste”
- 
+
 }
 
 Erros esperados:
 
 - Erro ao inserir registro!
-  
+
 
 
 **2 – Alterar GradeHorario:**
@@ -376,7 +477,7 @@ http://localhost:8080/GradeHorario/Alterar
 “diaSemana”: “Quinta",
 
 “Descrição”: “teste”
- 
+
 }
 
 Erros esperados:
@@ -390,7 +491,7 @@ GET
 
 http://localhost:8080/GradeHorario/ListarGradeHorario
 
-{	
+{
 
 "page": 1,
 
@@ -409,10 +510,10 @@ DELETE
 
 http://localhost:8080/GardeHorario/Remover?id={id}
 
-Erros esperados:	
+Erros esperados:
 
 - Erro ao remover registro!
-  
+
 
 
 **5 – InserirSemanal GradeHorario:**
@@ -431,9 +532,9 @@ http://localhost:8080/GradeHorario/InserirSemanal
 	“diaSemana”: “Quinta",
  
  	“Descrição”: “teste”
-  
-  }
-  
+
+}
+
 }
 
 Erros esperados:
@@ -446,10 +547,10 @@ GET
 
 http://localhost:8080/GradeHorario/Recuperar?id={id}
 
-Erros esperados: 
+Erros esperados:
 
 - Erro ao recuperar registro!
-  
+
 
 
 **8- RecuperarTodos GradeHorario:**
