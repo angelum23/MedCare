@@ -154,6 +154,7 @@ public interface ICacheListService<T>
     public void rightPush(String key, T value);
     public List<T> getList(String key);
     public void clearList(String key);
+}
 ```
 
 Para aplicar interfaces fluentes nele, podemos modificá-lo da seguinte forma:
@@ -165,6 +166,7 @@ public interface ICacheListService<T> {
     public ICacheListService<T> rightPush(String key, T value);
     public List<T> getList(String key);  // Essa linha é igual a original
     public ICacheListService<T> clearList(String key);
+}
 ```
 
 Uma implementação concreta desse novo código seria a seguinte:
