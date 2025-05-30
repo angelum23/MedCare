@@ -140,6 +140,172 @@ Abaixo, um exemplo real das sugestões feitas pelo Checkstyle diretamente no Int
 
 ---
 
+## Interfaces fluentes
+
+Não foram implementadas interfaces fluentes no projeto, mas em certos pontos há a possibilidade de utilizá-las, como:
+
+No arquivo ICacheListService, o código, excluindo o package e o import, está assim:
+
+```java
+public interface ICacheListService<T>
+{
+    public void setList(String key, List<T> value);
+    public void leftPush(String key, T value);
+    public void rightPush(String key, T value);
+    public List<T> getList(String key);
+    public void clearList(String key);
+```
+
+Para aplicar interfaces fluentes nele, podemos modificá-lo da seguinte forma:
+
+```java
+public interface ICacheListService<T> {
+    public ICacheListService<T> setList(String key, List<T> value);
+    public ICacheListService<T> leftPush(String key, T value);
+    public ICacheListService<T> rightPush(String key, T value);
+    public List<T> getList(String key);  // Essa linha é igual a original
+    public ICacheListService<T> clearList(String key);
+```
+
+Uma implementação concreta desse novo código seria a seguinte:
+
+```java
+public class RedisCacheListService<T> implements ICacheListService<T> {
+    
+    @Override
+    public ICacheListService<T> setList(String key, List<T> value) {
+        // Lógica de implementação
+        return this;
+    }
+
+    @Override
+    public ICacheListService<T> leftPush(String key, T value) {
+        // Lógica para leftPush
+        return this;
+    }
+	// Os outros métodos seriam implantados de forma similar
+}
+```
+
+Outro trecho de código onde interfaces fluentes podem ser utilizadas é este do arquivo PessoaController:
+
+```java
+@PostMapping("/InserirPessoa")
+public ResponseEntity<Object> inserir(@RequestBody InserirPessoaDto dadosPessoa) {
+    try {
+        Integer idPessoa = service.salvarComFoto(dadosPessoa);
+        return Success("Registro inserido com sucesso: " + idPessoa);
+    } catch (Exception e) {
+        return Error("Erro ao inserir registro! " + e.getMessage());
+    }
+}
+```
+
+Podemos modificá-lo da seguinte maneira: Primeiro, criar um build de respostas (na classe base ou utilitária):
+
+```java
+public class ResponseBuilder {
+    private Object data;
+    private String error;
+    private HttpStatus status;
+
+    public static ResponseBuilder success() {
+        return new ResponseBuilder().withStatus(HttpStatus.OK);
+    }
+
+    public static ResponseBuilder error() {
+        return new ResponseBuilder().withStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseBuilder withData(Object data) {
+        this.data = data;
+        return this;
+    }
+
+    public ResponseBuilder withError(String error) {
+        this.error = error;
+        return this;
+    }
+
+    public ResponseBuilder withStatus(HttpStatus status) {
+        this.status = status;
+        return this;
+    }
+
+    public ResponseEntity<Object> build() {
+        Map<String, Object> response = new HashMap<>();
+        if (data != null) response.put("data", data);
+        if (error != null) response.put("error", error);
+        return new ResponseEntity<>(response, status);
+    }
+}
+```
+
+Depois, um controller modificado:
+
+```java
+// Outras partes do código além da citada acima foram modificadas
+
+@RestController
+@RequestMapping("/Pessoa")
+public class PessoaController extends BaseController<Pessoa> {
+    // ... outros métodos
+
+    @PostMapping("/InserirPessoa")
+    public ResponseEntity<Object> inserir(@RequestBody InserirPessoaDto dadosPessoa) {
+        try {
+            Integer idPessoa = service.salvarComFoto(dadosPessoa);
+            return ResponseBuilder.success()
+                .withData(idPessoa)
+                .withMessage("Registro inserido com sucesso")
+                .build();
+        } catch (Exception e) {
+            return ResponseBuilder.error()
+                .withError("Erro ao inserir registro: " + e.getMessage())
+                .build();
+        }
+    }
+
+    @GetMapping("/ListarPessoa")
+    public ResponseEntity<Object> listar(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int rowsPerPage,
+            @RequestParam(required = false) String tipo) {
+        try {
+            EnumTipoPessoa enumTipo = tipo != null ? EnumTipoPessoa.valueOf(tipo) : null;
+            var pessoasEncontradas = service.listar(new ListarPessoaDto(page, rowsPerPage, enumTipo));
+            
+            return ResponseBuilder.success()
+                .withData(pessoasEncontradas)
+                .withPagination(page, rowsPerPage)
+                .build();
+        } catch (IllegalArgumentException e) {
+            return ResponseBuilder.error()
+                .withError("Tipo de pessoa inválido")
+                .withDetails(Arrays.toString(EnumTipoPessoa.values()))
+                .build();
+        }
+    }
+}
+```
+
+Essas mudanças trazem uma série de benefícios para o código, como:
+
+No primeiro exemplo:
+
+* Encadeamentos naturais;
+* Maior legibilidade para operações em sequência;
+* Fácil composição de operações de cache;
+
+No segundo exemplo:
+
+* Construção flexível de respostas:
+* Consistência nas respostas da API;
+* Extensibilidade;
+* Clareza no código do controller
+
+---
+
 ## Documentação
 
 **ENDPOINTS**
